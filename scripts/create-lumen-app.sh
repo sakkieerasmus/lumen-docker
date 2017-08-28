@@ -66,7 +66,7 @@ docker run --name lumen_app_mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d my
 
 echo "";
 echo "Rebuilding and start app container: 'lumen_app_app'";
-docker run -d -p 80:80 -p 443:443 --link lumen_app_mysql:db -e "DB_HOST=db" --name lumen_app_app -v ${PWD}:/var/www/web-app lumen-app;
+docker run -d -p 80:80 -p 443:443 --link lumen_app_mysql:db -e "DB_HOST=db" --name lumen_app_app -v ${PWD}/docker/apache/sites-available:/etc/apache2/sites-available -v ${PWD}:/var/www/web-app lumen-app;
 
 echo "
 APP_ENV=local
@@ -93,7 +93,7 @@ echo "Waiting for the app container to establish link to the database container.
 sleep 10;
 
 echo "We are listing your docker IP's below, please review before you continue:"
-docker-machine ip
+docker-machine ip lumen-app
 
 
 echo "Can we connect to your default docker IP '192.168.99.100'? If (y)es please type 'y' else type in your full IP i.e. 192.168.99.101"
