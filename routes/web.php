@@ -11,6 +11,9 @@
 |
 */
 
+$app->get('/health-check', 'HealthController@index');
+
 $app->get('/', function () use ($app) {
     return $app->version();
 });
+
