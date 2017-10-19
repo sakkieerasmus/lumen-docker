@@ -53,20 +53,20 @@ echo ""
 echo "Added/updated(if exists) .htaccess file to public/ directory."
 
 echo "";
-echo "Removing app container: 'lumen_app_app' (if exists)";
-docker rm -f -v lumen_app_app
+echo "Removing app container: 'lumen_app' (if exists)";
+docker rm -f -v lumen_app
 echo "";
 
-echo "Removing mysql app container: 'lumen_app_mysql' (if exists)";
-docker rm -f -v lumen_app_mysql
+echo "Removing mysql app container: 'lumen_mysql' (if exists)";
+docker rm -f -v lumen_mysql
 echo "";
 
-echo "Rebuilding and start mysql app container: 'lumen_app_mysql'";
-docker run --name lumen_app_mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:5.7
+echo "Rebuilding and start mysql app container: 'lumen_mysql'";
+docker run --name lumen_mysql -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:5.7
 
 echo "";
-echo "Rebuilding and start app container: 'lumen_app_app'";
-docker run -d -p 80:80 -p 443:443 --link lumen_app_mysql:db -e "DB_HOST=db" --name lumen_app_app -v ${PWD}/docker/apache/sites-available:/etc/apache2/sites-available -v ${PWD}:/var/www/web-app lumen-app;
+echo "Rebuilding and start app container: 'lumen_app'";
+docker run -d -p 80:80 -p 443:443 --link lumen_mysql:db -e "DB_HOST=db" --name lumen_app -v ${PWD}/docker/apache/sites-available:/etc/apache2/sites-available -v ${PWD}:/var/www/web-app lumen-app;
 
 echo "
 APP_ENV=local
@@ -75,9 +75,9 @@ APP_KEY=jIjKweUoinHBjdnkjnHuewkjnwkjn
 
 DB_CONNECTION=mysql
 DB_HOST=db
-DB_DATABASE=lumen_app
-DB_USERNAME=lumen_app
-DB_PASSWORD=lumen_app
+DB_DATABASE=lumen
+DB_USERNAME=lumen
+DB_PASSWORD=lumen
 
 CACHE_DRIVER=file
 QUEUE_DRIVER=sync
@@ -101,26 +101,26 @@ read q3
 
 if [ "$q3" == "y" ] || [ "$q3" == "Y" ] || [ "$q3" == "yes" ] || [ "$q3" == "Yes" ]; then
 
-docker exec -it lumen_app_mysql mysql -h 192.168.99.100 -uroot -proot -e \
-  "CREATE DATABASE lumen_app;" -e \
-  "CREATE USER lumen_app@'%' IDENTIFIED BY 'lumen_app';" -e \
-  "GRANT FILE ON *.* TO lumen_app@'%';" -e \
-  "GRANT ALL PRIVILEGES ON *.* TO lumen_app@'%';"
+docker exec -it lumen_mysql mysql -h 192.168.99.100 -uroot -proot -e \
+  "CREATE DATABASE lumen;" -e \
+  "CREATE USER lumen@'%' IDENTIFIED BY 'lumen';" -e \
+  "GRANT FILE ON *.* TO lumen@'%';" -e \
+  "GRANT ALL PRIVILEGES ON *.* TO lumen@'%';"
 
-echo "Create new database and user for lumen_app";
-echo "Created table and granted user permissions to lumen_app";
+echo "Create new database and user for lumen";
+echo "Created table and granted user permissions to lumen";
 
 
 else
 
-docker exec -it lumen_app_mysql mysql -h "$q3" -uroot -proot -e \
-  "CREATE DATABASE lumen_app;" -e \
-  "CREATE USER lumen_app@'%' IDENTIFIED BY 'lumen_app';" -e \
-  "GRANT FILE ON *.* TO lumen_app@'%';" -e \
-  "GRANT ALL PRIVILEGES ON *.* TO lumen_app@'%';"
+docker exec -it lumen_mysql mysql -h "$q3" -uroot -proot -e \
+  "CREATE DATABASE lumen;" -e \
+  "CREATE USER lumen@'%' IDENTIFIED BY 'lumen';" -e \
+  "GRANT FILE ON *.* TO lumen@'%';" -e \
+  "GRANT ALL PRIVILEGES ON *.* TO lumen@'%';"
 
-echo "Create new database and user for lumen_app";
-echo "Created table and granted user permissions to lumen_app";
+echo "Create new database and user for lumen";
+echo "Created table and granted user permissions to lumen";
 
 fi
 
@@ -136,4 +136,4 @@ Now, to run all migration and seeder:
 "
 echo "";
 
-docker exec -it lumen_app_app bash
+docker exec -it lumen_app bash
